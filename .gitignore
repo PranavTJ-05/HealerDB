@@ -1,0 +1,41 @@
+# Environment
+.env
+.env.railway
+openmetadata.env
+docker/openmetadata/openmetadata.env
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Docker volumes (never commit binary postgres data)
+docker/openmetadata/docker-volume/
+
+# Data directories
+data/chromadb/
+
+# Logs
+*.log
+logs/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
