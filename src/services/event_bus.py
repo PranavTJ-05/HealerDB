@@ -57,3 +57,4 @@ class EventBus:
 
 
 event_bus = EventBus()
+# Gracefully handle BUSYGROUP: consumer group already exists on startup
