@@ -106,4 +106,4 @@ async def get_row_count(table_name: str, schema: str = "public") -> int:
         result = await conn.execute(
             text(f'SELECT COUNT(*) FROM "{schema}"."{table_name}"')
         )
-        return result.scalar()
+        return result.scalar()# asyncpg requires CAST(:param AS jsonb) — the ::jsonb cast breaks prepared statements
