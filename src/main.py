@@ -266,6 +266,12 @@ app.include_router(onboarding_router, prefix="/api/v1", tags=["Onboarding"])
 app.include_router(proposal_router, prefix="/api/v1", tags=["Proposals"])
 app.include_router(table_routes.router, prefix="/api/v1", tags=["tables"])
 
+@app.get("/health", tags=["Health"])
+async def health():
+    """Lightweight liveness probe."""
+    return {"status": "ok", "app": "HealerDB"}
+
+
 @app.get("/api/v1/status", tags=["Health"])
 async def status():
     """Full system health — all 5 pipeline stages."""
@@ -292,3 +298,4 @@ if __name__ == "__main__":
         reload_dirs=["src"],
     )
     
+# Health endpoint — lightweight liveness probe for load balancers
