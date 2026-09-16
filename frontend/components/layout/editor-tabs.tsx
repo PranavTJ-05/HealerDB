@@ -7,17 +7,19 @@ import {
   Wrench, 
   BarChart3, 
   Database, 
-  ScrollText,
+  ScrollText, 
+  Settings,
   X
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const tabs = [
-  { href: "/dashboard",  label: "Dashboard.sql",       icon: LayoutDashboard },
-  { href: "/proposals",  label: "Remediations.diff",   icon: Wrench          },
-  { href: "/profiler",   label: "Profiler_Scan.json",  icon: BarChart3       },
-  { href: "/connections",label: "Connections.conf",    icon: Database        },
-  { href: "/audit",      label: "Audit_Log.out",       icon: ScrollText      },
+  { href: "/dashboard",   label: "Dashboard.sql",       icon: LayoutDashboard },
+  { href: "/proposals",   label: "Remediations.diff",   icon: Wrench          },
+  { href: "/profiler",    label: "Profiler_Scan.json",  icon: BarChart3       },
+  { href: "/connections", label: "Connections.conf",    icon: Database        },
+  { href: "/audit",       label: "Audit_Log.out",       icon: ScrollText      },
+  { href: "/settings",    label: "settings.json",       icon: Settings        },
 ];
 
 export function EditorTabs() {

@@ -56,13 +56,20 @@ export function ActivityBar() {
         </nav>
       </div>
 
+      {/* Settings gear — pinned to bottom */}
       <div className="flex flex-col items-center gap-2">
-        <button 
+        <Link
+          href="/settings"
           title="Studio Settings"
-          className="w-10 h-10 flex items-center justify-center text-[#94a3b8] hover:text-[#e2e8f0] hover:bg-[#1e1e2e] rounded-md transition-colors"
+          className={cn(
+            "w-10 h-10 flex items-center justify-center rounded-md transition-colors",
+            pathname.startsWith("/settings")
+              ? "text-blue-400 bg-blue-500/10"
+              : "text-[#94a3b8] hover:text-[#e2e8f0] hover:bg-[#1e1e2e]"
+          )}
         >
           <Settings className="w-5 h-5" />
-        </button>
+        </Link>
       </div>
     </aside>
   );
