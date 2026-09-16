@@ -24,7 +24,9 @@ htmlcov/
 docker/openmetadata/docker-volume/
 
 # Data directories
-data/chromadb/
+data/
+backend/data/
+frontend/.next/
 
 # Logs
 *.log

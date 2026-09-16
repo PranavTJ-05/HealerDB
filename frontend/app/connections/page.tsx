@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Database, Plus, CheckCircle2, RefreshCw, Server, Shield, ExternalLink, HardDrive } from "lucide-react";
 import { ConnectionModal } from "@/components/connections/connection-modal";
