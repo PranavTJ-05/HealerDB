@@ -16,7 +16,7 @@ class SlackSettings(BaseSettings):
     # Slack
     slack_bot_token: str = ""
     slack_app_token: str = ""
-    slack_ops_channel: str = "aegis-ops"
+    slack_ops_channel: str = "healerdb-ops"
 
     # HealerDB backend
     healerdb_base_url: str = "http://localhost:8001"

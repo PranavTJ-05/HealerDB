@@ -3,7 +3,7 @@ Redis Streams consumer for the Slack bot.
 Listens on healerdb:slack (published by slack_notifier.py after proposal save).
 
 Two responsibilities:
-  1. Post the proposal card to #aegis-ops when a new proposal arrives
+  1. Post the proposal card to #healerdb-ops when a new proposal arrives
   2. Store thread_ts → proposal_id mapping so app.py can update cards
      and so in-thread Q&A knows which proposal a message belongs to
 
@@ -405,7 +405,7 @@ class SlackStreamListener:
         """
         Fetch fix history for a table from the reports API.
         Returns a formatted Slack mrkdwn string.
-        Used by /aegis history {table_name} command in app.py.
+        Used by /healer history {table_name} command in app.py.
         """
         try:
             async with httpx.AsyncClient(timeout=8.0) as client:

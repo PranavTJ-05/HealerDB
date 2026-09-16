@@ -5,9 +5,9 @@ Run from project root:
     python -m slack_bot.app
 
 Phases implemented:
-    Phase 1 — Proposal card, Approve/Reject, /aegis status/proposals/audit/help
-    Phase 2 — In-thread Q&A, /aegis ask
-    Phase 3 — Rejection → ChromaDB, /aegis why
+    Phase 1 — Proposal card, Approve/Reject, /healer status/proposals/audit/help
+    Phase 2 — In-thread Q&A, /healer ask
+    Phase 3 — Rejection → ChromaDB, /healer why
     Phase 4-6 — Ephemeral feedback, card state machine, boot hardening
 """
 
@@ -254,7 +254,7 @@ async def handle_reject_button(ack, body, client, action):
         view=rejection_modal(proposal_id=proposal_id, table_name=table_name),
     )
 
-# ── Quick action buttons from /aegis status ───────────────────────────────────
+# ── Quick action buttons from /healer status ───────────────────────────────────
 
 @app.action("quick_proposals")
 async def handle_quick_proposals(ack, say):
@@ -429,8 +429,8 @@ async def handle_thread_message(event, client):
     
 # ── Phase 1+2: Slash command dispatcher ──────────────────────────────────────
 
-@app.command("/aegis")
-async def handle_aegis_command(ack, command, say, client):
+@app.command("/healer")
+async def handle_healer_command(ack, command, say, client):
     await ack()
 
     text  = (command.get("text") or "").strip()
@@ -451,10 +451,10 @@ async def handle_aegis_command(ack, command, say, client):
     if handler:
         await handler()
     else:
-        await say(f"Unknown command `{sub}`. Try `/aegis help`.")
+        await say(f"Unknown command `{sub}`. Try `/healer help`.")
 
 
-# ── /aegis status ─────────────────────────────────────────────────────────────
+# ── /healer status ─────────────────────────────────────────────────────────────
 
 async def _cmd_status(say):
     # Fetch both endpoints concurrently
@@ -582,7 +582,7 @@ async def _cmd_status(say):
     )
 
 
-# ── /aegis proposals ──────────────────────────────────────────────────────────
+# ── /healer proposals ──────────────────────────────────────────────────────────
 
 async def _cmd_proposals(say):
     data = await _api_get("/proposals?status=pending_approval&limit=5")
@@ -632,7 +632,7 @@ async def _cmd_proposals(say):
     await say(blocks=blocks, text=f"{len(proposals)} pending proposals")
 
 
-# ── /aegis audit ─────────────────────────────────────────────────────────────
+# ── /healer audit ─────────────────────────────────────────────────────────────
 
 async def _cmd_audit(say, limit: int = 5):
     limit = min(limit, 10)
@@ -687,13 +687,13 @@ async def _cmd_audit(say, limit: int = 5):
     await say(blocks=blocks, text=f"Last {len(entries)} audit entries")
 
 
-# ── /aegis ask ────────────────────────────────────────────────────────────────
+# ── /healer ask ────────────────────────────────────────────────────────────────
 
 async def _cmd_ask(say, question: str):
     if not question:
         await say(
-            "Usage: `/aegis ask [question]`\n"
-            "Example: `/aegis ask which tables have worsening NULL trends?`"
+            "Usage: `/healer ask [question]`\n"
+            "Example: `/healer ask which tables have worsening NULL trends?`"
         )
         return
 
@@ -722,13 +722,13 @@ async def _cmd_ask(say, question: str):
     )
 
 
-# ── /aegis why ────────────────────────────────────────────────────────────────
+# ── /healer why ────────────────────────────────────────────────────────────────
 
 async def _cmd_why(say, table_name: str):
     if not table_name:
         await say(
-            "Usage: `/aegis why [table_name]`\n"
-            "Example: `/aegis why orders`"
+            "Usage: `/healer why [table_name]`\n"
+            "Example: `/healer why orders`"
         )
         return
 
@@ -778,7 +778,7 @@ async def _cmd_why(say, table_name: str):
     )
 
 
-# ── /aegis help ───────────────────────────────────────────────────────────────
+# ── /healer help ───────────────────────────────────────────────────────────────
 
 async def _cmd_help(say):
     await say(
@@ -796,15 +796,15 @@ async def _cmd_help(say):
                 "text": {
                     "type": "mrkdwn",
                     "text": (
-                        "*`/aegis status`*\n"
+                        "*`/healer status`*\n"
                         "Pipeline health, mode, stream depths.\n\n"
-                        "*`/aegis proposals`*\n"
+                        "*`/healer proposals`*\n"
                         "List all pending fix proposals.\n\n"
-                        "*`/aegis audit [n]`*\n"
+                        "*`/healer audit [n]`*\n"
                         "Show last N audit entries (max 10).\n\n"
-                        "*`/aegis ask [question]`*\n"
+                        "*`/healer ask [question]`*\n"
                         "Ask HealerDB anything about your data quality.\n\n"
-                        "*`/aegis why [table]`*\n"
+                        "*`/healer why [table]`*\n"
                         "Explain why a table keeps having issues — pulls rejection memory.\n\n"
                         "*Reply in any proposal thread*\n"
                         "Ask questions about that specific proposal inline."

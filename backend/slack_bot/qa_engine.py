@@ -2,8 +2,8 @@
 Phase 2 — In-thread Q&A and global ask engine.
 
 answer_question()       — for thread replies on a specific proposal
-answer_global_question() — for /aegis ask (no proposal context)
-answer_why_table()      — for /aegis why (rejection memory synthesis)
+answer_global_question() — for /healer ask (no proposal context)
+answer_why_table()      — for /healer why (rejection memory synthesis)
 """
 
 import asyncio
@@ -264,7 +264,7 @@ async def answer_question(question: str, proposal_id: str) -> str:
 
 
 async def answer_global_question(question: str) -> str:
-    """/aegis ask — no specific proposal context."""
+    """/healer ask — no specific proposal context."""
     logger.info(f"[QA] Global question: '{question[:80]}'")
 
     context_parts: list[str] = []
@@ -313,7 +313,7 @@ async def answer_global_question(question: str) -> str:
 
 
 async def answer_why_table(table_name: str) -> str:
-    """/aegis why — rejection memory synthesis for a table."""
+    """/healer why — rejection memory synthesis for a table."""
     logger.info(f"[QA] Why query for table='{table_name}'")
 
     rejections = await asyncio.get_running_loop().run_in_executor(

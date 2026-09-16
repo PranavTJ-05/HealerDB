@@ -117,7 +117,7 @@ src/main.py                         # Boot/shutdown slack_notifier
 class SlackSettings(BaseSettings):
     slack_bot_token: str       # xoxb- token
     slack_app_token: str       # xapp- token (Socket Mode)
-    slack_ops_channel: str     # e.g. "aegis-ops"
+    slack_ops_channel: str     # e.g. "healer-ops"
     healerdb_base_url: str      # e.g. "http://localhost:8001"
     redis_host: str
     redis_port: int
@@ -254,8 +254,8 @@ Three public entry points:
 | Function | Used by | Context assembled |
 |---|---|---|
 | `answer_question(question, proposal_id)` | Thread message handler | Proposal detail + similar fixes + rejections + profiling trend |
-| `answer_global_question(question)` | `/aegis ask` | Last 10 audit entries + pending proposals |
-| `answer_why_table(table_name)` | `/aegis why` | Rejection history synthesis |
+| `answer_global_question(question)` | `/healer ask` | Last 10 audit entries + pending proposals |
+| `answer_why_table(table_name)` | `/healer why` | Rejection history synthesis |
 
 **Context assembly runs concurrently:**
 
@@ -270,7 +270,7 @@ profiling_summary, similar_fixes, rejections = await asyncio.gather(
 **Known limitation:** `_sync_similar_fixes` imports `from src.db.vector_store import vector_store` at call time. If the bot process doesn't have `vector_store` initialized (it won't unless run from project root with correct PYTHONPATH), this fails with `NoneType has no attribute 'count'`. Non-fatal — answer still works using rejection history.
 
 **Groq model:** `llama-3.3-70b-versatile`  
-**Max tokens:** 512 for Q&A, 400 for `/aegis why` synthesis  
+**Max tokens:** 512 for Q&A, 400 for `/healer why` synthesis  
 **Temperature:** 0.2 (slightly higher than diagnosis's 0.1 for natural language)
 
 ---
@@ -285,7 +285,7 @@ profiling_summary, similar_fixes, rejections = await asyncio.gather(
 | `handle_reject_button` | Button `reject_proposal` | Open rejection modal |
 | `handle_rejection_submit` | Modal `rejection_modal_submit` | POST reject API + store ChromaDB + update card |
 | `handle_thread_message` | `@app.event("message")` | Thread Q&A via qa_engine |
-| `handle_aegis_command` | `/aegis` | Dispatch to cmd functions |
+| `handle_healer_command` | `/healer` | Dispatch to cmd functions |
 | `handle_quick_proposals` | Button `quick_proposals` | Inline proposals list |
 | `handle_quick_audit` | Button `quick_audit` | Inline audit list |
 
@@ -321,7 +321,7 @@ async def handle_message_deleted(ack): await ack()
 4. FastAPI: create_proposal() → slack_notifier.notify_proposal()
 5. slack_notifier: XADD healerdb:slack
 6. stream_listener: XREADGROUP → _handle_new_proposal()
-7. Slack: detecting_card posted to #aegis-ops
+7. Slack: detecting_card posted to #healer-ops
 8. stream_listener: GET /proposals/{id} → proposal_card posted
 9. Engineer: replies in thread → handle_thread_message fires
 10. qa_engine: assembles context → Groq → answer posted in thread
@@ -339,7 +339,7 @@ async def handle_message_deleted(ack): await ack()
    a. POST /proposals/{id}/reject
    b. Update card to rejected receipt
    c. rejection_store.store_rejection() → ChromaDB
-4. Engineer: /aegis why orders
+4. Engineer: /healer why orders
 5. answer_why_table(): rejection_store.find_rejections_for_table()
 6. Groq synthesises rejection history → posted in channel
 ```
@@ -354,7 +354,7 @@ async def handle_message_deleted(ack): await ack()
 |---|---|
 | `chat:write` | Post and update messages |
 | `chat:write.public` | Post to channels without being invited |
-| `commands` | Register `/aegis` slash command |
+| `commands` | Register `/healer` slash command |
 | `channels:history` | Read messages for thread Q&A |
 | `groups:history` | Read messages in private channels |
 | `im:write` | Send DMs to table owners |
@@ -385,7 +385,7 @@ is run in the target channel.
 
 ### Slash Command
 
-- Command: `/aegis`
+- Command: `/healer`
 - Request URL: blank (Socket Mode)
 - Subcommands: `status | proposals | audit [n] | ask [question] | why [table] | help`
 
@@ -399,14 +399,14 @@ Add these to `.env` (alongside existing backend vars):
 # Slack Bot
 SLACK_BOT_TOKEN=xoxb-...
 SLACK_APP_TOKEN=xapp-...
-SLACK_OPS_CHANNEL=aegis-ops
+SLACK_OPS_CHANNEL=healer-ops
 
 # These are already in .env — bot reads same file
 GROQ_API_KEY=gsk_...
 REDIS_HOST=localhost
 REDIS_PORT=6379
 CHROMA_PERSIST_DIR=./data/chromadb
-AEGISDB_BASE_URL=http://localhost:8001
+HEALERDB_BASE_URL=http://localhost:8001
 ```
 
 ---
@@ -496,7 +496,7 @@ Both use `all-MiniLM-L6-v2` embeddings and cosine similarity. Both live in the s
 **Fix:** Initialize `proposal = None` before the `try` block. Move map update to after the fetch.
 
 ### Bug 2 — Thread Q&A never firing
-**Cause:** Bot was posting to `#aegis-ops` via `chat:write.public` without being a member. Message events only delivered to channels bot has joined.  
+**Cause:** Bot was posting to `#healer-ops` via `chat:write.public` without being a member. Message events only delivered to channels bot has joined.  
 **Fix:** `/invite @BotName` in the channel. Required even with `channels:history` scope.
 
 ### Bug 3 — Diff table showing all columns changing
@@ -548,15 +548,15 @@ Terminal 2: python -m slack_bot.app
 Terminal 3: (for curl commands)
 ```
 
-1. `/aegis help` → verify bot alive
-2. `/aegis status` → dashboard grid
+1. `/healer help` → verify bot alive
+2. `/healer status` → dashboard grid
 3. Fire webhook → watch detecting card → self-update to proposal
 4. Reply in thread: `is it safe to approve?` → Groq answers with context
 5. Click **Reject** → enter reason → card updates
-6. `/aegis why orders` → **MONEY MOMENT** — Groq synthesises your rejection back
+6. `/healer why orders` → **MONEY MOMENT** — Groq synthesises your rejection back
 7. Fire webhook again → click **Approve** → card morphs through states → receipt
-8. `/aegis audit 5` → color-coded history
-9. `/aegis ask which tables have the most anomalies?` → global Q&A
+8. `/healer audit 5` → color-coded history
+9. `/healer ask which tables have the most anomalies?` → global Q&A
 
 ---
 

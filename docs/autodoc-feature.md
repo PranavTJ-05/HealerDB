@@ -90,7 +90,7 @@ class FixType(str, Enum):
 class FixReport(BaseModel):
     report_id:          str       # UUID, primary key
     event_id:           str       # FK → _healerdb_audit.event_id
-    table_fqn:          str       # e.g. "aegisDB.northwind.public.orders"
+    table_fqn:          str       # e.g. "healerDB.northwind.public.orders"
     table_name:         str       # e.g. "orders"
     column_name:        str       # primary column fixed, extracted from fix_sql
     anomaly_type:       str       # e.g. "null_violation"
@@ -213,7 +213,7 @@ interface ReportsResponse { ... } // { count: number, reports: FixReport[] }
 interface ReportStats { ... }     // aggregate stats for header cards
 ```
 
-**`lib/api.ts`** — three new methods on `aegisApi`:
+**`lib/api.ts`** — three new methods on `healerApi`:
 ```typescript
 getReports(limit, tableName?)   // GET /reports
 getReportStats()                 // GET /reports/stats
@@ -406,13 +406,13 @@ asyncio.create_task(
 
 ### 7.3 `stream_listener.py` — `fetch_table_history`
 
-New public helper for `/aegis history {table_name}` command:
+New public helper for `/healer history {table_name}` command:
 
 ```python
 async def fetch_table_history(self, table_name: str) -> str:
     """
     Queries GET /reports?table_name=X and returns formatted Slack mrkdwn.
-    Used by /aegis history command in app.py.
+    Used by /healer history command in app.py.
     """
 ```
 
@@ -425,15 +425,15 @@ Returns formatted text like:
 3. ship_region · Null Violation · 508 rows · Confidence 95% · 2026-04-25
 ```
 
-To wire `/aegis history` into the command dispatcher, add to `app.py`:
+To wire `/healer history` into the command dispatcher, add to `app.py`:
 ```python
-# In handle_aegis_command dispatch dict:
+# In handle_healer_command dispatch dict:
 "history": lambda: _cmd_history(say, args.lower()),
 
 # New function:
 async def _cmd_history(say, table_name: str):
     if not table_name:
-        await say("Usage: `/aegis history [table_name]`")
+        await say("Usage: `/healer history [table_name]`")
         return
     text = await stream_listener.fetch_table_history(table_name)
     await say(text)
@@ -461,7 +461,7 @@ Returns all fix reports, newest first.
     {
       "report_id": "5e1444bc-...",
       "event_id": "8656299c-...",
-      "table_fqn": "aegisDB.northwind.public.orders",
+      "table_fqn": "healerDB.northwind.public.orders",
       "table_name": "orders",
       "column_name": "ship_region",
       "anomaly_type": "null_violation",
@@ -622,7 +622,7 @@ The `idx_reports_column_anomaly` composite index is the most important — it's 
 
 **`anomaly_severity` uses `categories[1]`** — a known quirk. The severity is taken from the second element of `failure_categories` list on the audit entry, which sometimes contains the severity string depending on how the detector serialised it. If `len(categories) <= 1`, it defaults to `"low"`. This should be refactored to read severity from `EnrichedFailureEvent.severity` directly.
 
-**`/aegis history` command is not yet wired** into `app.py`'s command dispatcher. `fetch_table_history` exists on `stream_listener` and is ready to use — it just needs the dispatch entry and `_cmd_history` function added to `app.py` (see Phase 3 section above).
+**`/healer history` command is not yet wired** into `app.py`'s command dispatcher. `fetch_table_history` exists on `stream_listener` and is ready to use — it just needs the dispatch entry and `_cmd_history` function added to `app.py` (see Phase 3 section above).
 
 **`proposal_message_map` resets on Slack bot restart.** This is an existing limitation documented in the Slack integration docs. After a restart, button clicks on old cards still work (proposal_id is in the payload) but the poller won't have the `ts` mapping for pre-restart cards.
 
@@ -679,7 +679,7 @@ Use this checklist for any future regression testing of the auto-doc feature.
 
 ### Phase 3 — Slack
 - [ ] Slack bot running (`python -m slack_bot.app`)
-- [ ] Proposal card appears in `#aegis-ops` after webhook
+- [ ] Proposal card appears in `#healer-ops` after webhook
 - [ ] Approve via Slack button
 - [ ] Log shows `[Bot] Card resolved action=applied`
 - [ ] Resolved card shows `Mode: LIVE`, `Confidence: 95%`

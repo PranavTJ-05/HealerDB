@@ -612,7 +612,7 @@ def resolved_card(
                     "text": (
                         "⚠️  The fix could not be applied — "
                         "transaction was rolled back automatically.\n"
-                        "Run `/aegis audit` for full error details."
+                        "Run `/healer audit` for full error details."
                     ),
                 },
             },

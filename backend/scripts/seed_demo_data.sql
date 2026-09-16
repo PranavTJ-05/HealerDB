@@ -11,7 +11,7 @@ INSERT INTO _healerdb_proposals (
 (
     'a1b2c3d4-0001-0001-0001-000000000001',
     'e1b2c3d4-0001-0001-0001-000000000001',
-    'aegisDB.default.public.orders',
+    'healerdb.default.public.orders',
     'orders',
     ARRAY['null_violation'],
     'NULL values found in customer_id column violating NOT NULL constraint. 2 orphaned order records have no associated customer.',
@@ -29,7 +29,7 @@ INSERT INTO _healerdb_proposals (
 (
     'a1b2c3d4-0002-0002-0002-000000000002',
     'e1b2c3d4-0002-0002-0002-000000000002',
-    'aegisDB.default.public.orders',
+    'healerdb.default.public.orders',
     'orders',
     ARRAY['range_violation'],
     'Negative amount value found in orders table. Order #4 has amount=-500.00 which violates business rule that amounts must be positive.',
@@ -47,7 +47,7 @@ INSERT INTO _healerdb_proposals (
 (
     'a1b2c3d4-0003-0003-0003-000000000003',
     'e1b2c3d4-0003-0003-0003-000000000003',
-    'aegisDB.default.public.customers',
+    'healerdb.default.public.customers',
     'customers',
     ARRAY['uniqueness_violation'],
     'Duplicate email found: alice@example.com appears twice in customers table. One record has invalid age=-5 suggesting it is a dirty duplicate.',
@@ -65,7 +65,7 @@ INSERT INTO _healerdb_proposals (
 (
     'a1b2c3d4-0004-0004-0004-000000000004',
     'e1b2c3d4-0004-0004-0004-000000000004',
-    'aegisDB.default.public.customers',
+    'healerdb.default.public.customers',
     'customers',
     ARRAY['range_violation'],
     'Invalid age values detected: customer with age=-5 and customer with age=200 both fall outside valid human age range [0,150].',
@@ -91,7 +91,7 @@ INSERT INTO _healerdb_audit (
 ) VALUES
 (
     'e1b2c3d4-0002-0002-0002-000000000002',
-    'aegisDB.default.public.orders',
+    'healerdb.default.public.orders',
     'orders',
     'applied',
     'UPDATE "orders" SET amount = ABS(amount) WHERE amount < 0;',
@@ -103,7 +103,7 @@ INSERT INTO _healerdb_audit (
 ),
 (
     'e1b2c3d4-0003-0003-0003-000000000003',
-    'aegisDB.default.public.customers',
+    'healerdb.default.public.customers',
     'customers',
     'rejected',
     'DELETE FROM "customers" WHERE ctid NOT IN (SELECT MIN(ctid) FROM "customers" GROUP BY email) AND email IS NOT NULL;',
@@ -115,7 +115,7 @@ INSERT INTO _healerdb_audit (
 ),
 (
     'e1b2c3d4-0005-0005-0005-000000000005',
-    'aegisDB.default.public.orders',
+    'healerdb.default.public.orders',
     'orders',
     'dry_run',
     'DELETE FROM "orders" WHERE status NOT IN (''completed'', ''pending'', ''cancelled'');',
