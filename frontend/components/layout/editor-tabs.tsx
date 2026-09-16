@@ -5,19 +5,21 @@ import { usePathname } from "next/navigation";
 import { 
   LayoutDashboard, 
   Wrench, 
-  Search, 
+  BarChart3, 
   Database, 
-  ClipboardList,
+  ScrollText,
+  Settings,
   X
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const tabs = [
-  { href: "/dashboard", label: "Dashboard.sql", icon: LayoutDashboard },
-  { href: "/proposals", label: "Remediations.diff", icon: Wrench },
-  { href: "/profiling", label: "Profiler_Scan.json", icon: Search },
-  { href: "/connections", label: "Connections.conf", icon: Database },
-  { href: "/audit", label: "Audit_Log.out", icon: ClipboardList },
+  { href: "/dashboard",   label: "Dashboard.sql",       icon: LayoutDashboard },
+  { href: "/proposals",   label: "Remediations.diff",   icon: Wrench          },
+  { href: "/profiler",    label: "Profiler_Scan.json",  icon: BarChart3       },
+  { href: "/connections", label: "Connections.conf",    icon: Database        },
+  { href: "/audit",       label: "Audit_Log.out",       icon: ScrollText      },
+  { href: "/settings",    label: "settings.json",       icon: Settings        },
 ];
 
 export function EditorTabs() {
