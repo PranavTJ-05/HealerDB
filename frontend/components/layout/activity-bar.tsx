@@ -5,20 +5,20 @@ import { usePathname } from "next/navigation";
 import { 
   LayoutDashboard, 
   Wrench, 
-  Search, 
+  BarChart3, 
   Database, 
-  ClipboardList, 
+  ScrollText, 
   Settings,
   Flame
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const items = [
-  { href: "/dashboard", label: "Explorer & Dashboard", icon: LayoutDashboard },
-  { href: "/proposals", label: "Self-Healing Proposals", icon: Wrench },
-  { href: "/profiling", label: "Database Profiler", icon: Search },
-  { href: "/connections", label: "Target Connections", icon: Database },
-  { href: "/audit", label: "Audit & Execution Log", icon: ClipboardList },
+  { href: "/dashboard",   label: "Explorer & Dashboard",       icon: LayoutDashboard },
+  { href: "/proposals",   label: "Self-Healing Proposals",     icon: Wrench          },
+  { href: "/profiler",    label: "Database Profiler",          icon: BarChart3       },
+  { href: "/connections", label: "Target Connections",         icon: Database        },
+  { href: "/audit",       label: "Audit & Execution Log",      icon: ScrollText      },
 ];
 
 export function ActivityBar() {
