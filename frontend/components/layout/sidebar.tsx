@@ -9,10 +9,12 @@ import {
   Database, 
   AlertCircle, 
   CheckCircle2, 
-  Flame, 
   Terminal,
   Activity,
-  Layers
+  Layers,
+  BarChart3,
+  Wrench,
+  ScrollText,
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -23,10 +25,30 @@ export function Sidebar() {
     explorer: true,
     telemetry: true,
     diagnostics: true,
+    views: true,
   });
 
   const toggleSection = (key: keyof typeof openSections) => {
     setOpenSections(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const navLink = (href: string, label: string, icon: React.ReactNode) => {
+    const active = pathname.startsWith(href);
+    return (
+      <Link
+        key={href}
+        href={href}
+        className={cn(
+          "flex items-center gap-2 py-1 px-2 rounded text-[11px] transition-colors",
+          active
+            ? "bg-[#28283d] text-blue-400"
+            : "hover:bg-[#28283d] text-[#94a3b8] hover:text-[#cbd5e1]"
+        )}
+      >
+        {icon}
+        <span>{label}</span>
+      </Link>
+    );
   };
 
   return (
@@ -41,6 +63,27 @@ export function Sidebar() {
       </div>
 
       <div className="flex-1 overflow-y-auto py-2">
+        {/* Section: Views */}
+        <div className="mb-2">
+          <button 
+            onClick={() => toggleSection("views")}
+            className="w-full flex items-center gap-1.5 px-3 py-1 hover:bg-[#28283d] text-[#cbd5e1] font-semibold text-[11px]"
+          >
+            {openSections.views ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+            <span className="uppercase">Studio Views</span>
+          </button>
+          
+          {openSections.views && (
+            <div className="pl-4 pr-2 py-1 flex flex-col gap-0.5">
+              {navLink("/dashboard",   "Dashboard.sql",      <Activity  className="w-3.5 h-3.5" />)}
+              {navLink("/profiler",    "Profiler_Scan.json", <BarChart3 className="w-3.5 h-3.5" />)}
+              {navLink("/proposals",   "Remediations.diff",  <Wrench    className="w-3.5 h-3.5" />)}
+              {navLink("/connections", "Connections.conf",   <Database  className="w-3.5 h-3.5" />)}
+              {navLink("/audit",       "Audit_Log.out",      <ScrollText className="w-3.5 h-3.5" />)}
+            </div>
+          )}
+        </div>
+
         {/* Section: Active Target Database */}
         <div className="mb-2">
           <button 
@@ -72,7 +115,7 @@ export function Sidebar() {
             className="w-full flex items-center gap-1.5 px-3 py-1 hover:bg-[#28283d] text-[#cbd5e1] font-semibold text-[11px]"
           >
             {openSections.telemetry ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
-            <span className="uppercase">Event Bus & Stream</span>
+            <span className="uppercase">Event Bus &amp; Stream</span>
           </button>
           
           {openSections.telemetry && (
