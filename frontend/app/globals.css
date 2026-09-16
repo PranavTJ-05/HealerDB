@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --vscode-activity-bar: #181824;
+    --vscode-activity-bar-active: #3b82f6;
+    --vscode-side-bar: #1e1e2e;
+    --vscode-editor-bg: #13131d;
+    --vscode-editor-tab-active: #13131d;
+    --vscode-editor-tab-inactive: #1e1e2e;
+    --vscode-status-bar: #0f0f17;
+    --vscode-border: #2b2b3d;
+    --vscode-text: #e2e8f0;
+    --vscode-text-muted: #94a3b8;
+  }
+}
+
+body {
+  background-color: var(--vscode-editor-bg);
+  color: var(--vscode-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+}
+
+/* Custom VS Code Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #181824;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2b2b3d;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f5a;
+}
