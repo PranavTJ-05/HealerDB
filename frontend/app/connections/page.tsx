@@ -1,7 +1,8 @@
-"use client";
-
 import { useState } from "react";
 import { Database, Plus, CheckCircle2, RefreshCw, Server, Shield, ExternalLink, HardDrive } from "lucide-react";
+import { ConnectionModal } from "@/components/connections/connection-modal";
+import { SchemaViewer } from "@/components/connections/schema-viewer";
+import { TelemetryCard } from "@/components/connections/telemetry-card";
 
 interface DBConnection {
   id: string;
@@ -141,6 +142,9 @@ export default function ConnectionsPage() {
         ))}
       </div>
 
+      {/* Telemetry Summary */}
+      <TelemetryCard />
+
       {/* Target Parameters Info Box */}
       <div className="bg-[#181824] border border-[#2b2b3d] rounded-lg p-4 font-mono text-xs text-[#94a3b8] space-y-2">
         <div className="flex items-center gap-2 text-blue-400 font-semibold">
@@ -151,6 +155,16 @@ export default function ConnectionsPage() {
           Credentials registered with HealerDB are stored locally in memory and never logged or exposed. Before running any remedy, agents launch an ephemeral Docker sandbox container with your schema and test row clones to guarantee zero production regressions.
         </p>
       </div>
+
+      {/* Live Schema Inspection */}
+      <SchemaViewer />
+
+      {/* Add Connection Modal */}
+      <ConnectionModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onSave={(newConn) => setConnections(prev => [...prev, newConn])}
+      />
     </div>
   );
 }
