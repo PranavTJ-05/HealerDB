@@ -11,7 +11,7 @@ services:
       - "${TARGET_DB_PORT:-5433}:5432"
     volumes:
       - healerdb-data:/var/lib/postgresql/data
-      - ./scripts/seed_dirty_data.sql:/docker-entrypoint-initdb.d/seed.sql
+      - ./backend/scripts/seed_dirty_data.sql:/docker-entrypoint-initdb.d/seed.sql
     networks:
       - healerdb-net
     healthcheck:
