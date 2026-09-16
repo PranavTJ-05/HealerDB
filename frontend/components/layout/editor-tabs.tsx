@@ -7,7 +7,7 @@ import {
   Wrench, 
   BarChart3, 
   Database, 
-  ScrollText,
+  ScrollText, 
   Settings,
   X
 } from "lucide-react";

@@ -14,11 +14,11 @@ import {
 import { cn } from "@/lib/utils";
 
 const items = [
-  { href: "/dashboard",   label: "Explorer & Dashboard",   icon: LayoutDashboard },
-  { href: "/proposals",   label: "Self-Healing Proposals", icon: Wrench          },
-  { href: "/profiler",    label: "Database Profiler",      icon: BarChart3       },
-  { href: "/connections", label: "Target Connections",     icon: Database        },
-  { href: "/audit",       label: "Audit & Execution Log",  icon: ScrollText      },
+  { href: "/dashboard",   label: "Explorer & Dashboard",       icon: LayoutDashboard },
+  { href: "/proposals",   label: "Self-Healing Proposals",     icon: Wrench          },
+  { href: "/profiler",    label: "Database Profiler",          icon: BarChart3       },
+  { href: "/connections", label: "Target Connections",         icon: Database        },
+  { href: "/audit",       label: "Audit & Execution Log",      icon: ScrollText      },
 ];
 
 export function ActivityBar() {
